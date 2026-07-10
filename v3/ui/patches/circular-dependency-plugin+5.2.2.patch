@@ -1,0 +1,10 @@
+diff --git a/node_modules/circular-dependency-plugin/index.js b/node_modules/circular-dependency-plugin/index.js
+index 4a97247..79caea6 100644
+--- a/node_modules/circular-dependency-plugin/index.js
++++ b/node_modules/circular-dependency-plugin/index.js
+@@ -1,4 +1,4 @@
+ let path = require('path')
+-let extend = require('util')._extend
++let extend = Object.assign
+ let BASE_ERROR = 'Circular dependency detected:\r\n'
+ let PluginTitle = 'CircularDependencyPlugin'

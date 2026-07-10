@@ -1,0 +1,28 @@
+@import '~@angular/material/theming';
+
+@mixin app-request-list-theme($theme) {
+  $background: map-get($theme, background);
+
+  [appRequestListItem] {
+    height: auto!important;
+    cursor: pointer;
+    &:hover {
+    background-color: mat-color($background, 'hover');
+    }
+    &[aria-selected="true"] {
+      // 0.12 comes from "activated" https://material.io/design/interaction/states.html#anatomy
+      background-color: mat-color($background, 'hover', 0.12);
+      font-weight: 500;
+    }
+  }
+};
+
+[mat-cell] {
+  max-width: 10vw;
+  &.mat-column-pathquery {
+    max-width: 60vw;
+  }
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

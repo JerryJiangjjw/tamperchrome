@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"sourceMap": true,
+		"target": "ES2018",
+		"module": "ES2020",
+		"moduleResolution": "node",
+		"alwaysStrict": true,
+		"skipLibCheck": true,
+		"outDir": "../out"
+	},
+	"files": [
+		"background.ts",
+		"debuggee.ts",
+		"interception.ts",
+		"request.ts",
+	],
+}

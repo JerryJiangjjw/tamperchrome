@@ -1,0 +1,44 @@
+<table
+  mat-table
+  fxFill
+  [dataSource]="dataSource"
+  aria-label="List of HTTP Requests"
+  (keydown)="keyManager?.onKeydown($event)">
+  <ng-container matColumnDef="method">
+    <th mat-header-cell *matHeaderCellDef>Method</th>
+    <td mat-cell *matCellDef="let request">{{request.method}}</td>
+  </ng-container>
+  <ng-container matColumnDef="host">
+    <th mat-header-cell *matHeaderCellDef>Host</th>
+    <td mat-cell *matCellDef="let request" [attr.title]="request.host">{{request.host}}</td>
+  </ng-container>
+  <ng-container matColumnDef="pathquery">
+    <th mat-header-cell *matHeaderCellDef>Path + Query</th>
+    <td mat-cell *matCellDef="let request" [attr.title]="request.path + request.query">
+      <span style="padding-right: 1ch;">{{request.path}}</span><span>{{request.query}}</span>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef>Type</th>
+    <td mat-cell *matCellDef="let request">{{request.type}}</td>
+  </ng-container>
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef>Status</th>
+    <td mat-cell *matCellDef="let request">{{request.pending?"intercepted":request.hasResponse?"received":"sent"}}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr
+    mat-row
+    appRequestListItem
+    *matRowDef="let row; columns: displayedColumns; let i = index;"
+    [request]="row"
+    [disabled]="!row.visible"
+    [hidden]="!row.visible"
+    (click)="setActive(i)"
+    (focus)="setActive(i)"
+    [attr.tabindex]="isActive(i)?0:-1"
+    [attr.aria-selected]="isActive(i)"
+    [ngClass]="{'cdk-keyboard-focused': isActive(i)}">
+  </tr>
+</table>
