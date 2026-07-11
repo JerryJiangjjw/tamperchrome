@@ -9,6 +9,25 @@ import {
 
 import type { InterceptedData } from '../../common/types';
 
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder();
+
+function encodeUtf8Base64(value: string): string {
+  const bytes = textEncoder.encode(value);
+  const chunkSize = 0x8000;
+  let binary = '';
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(offset, offset + chunkSize));
+  }
+  return btoa(binary);
+}
+
+function decodeUtf8Base64(value: string): string {
+  const binary = atob(value);
+  const bytes = Uint8Array.from(binary, byte => byte.charCodeAt(0));
+  return textDecoder.decode(bytes);
+}
+
 export abstract class Intercepted implements InterceptedData {
   protected debuggee: Debuggee;
   id: string;
@@ -42,7 +61,7 @@ export abstract class Intercepted implements InterceptedData {
     }
     let body = await this.getResponseBodyInternal();
     if (body && body.base64Encoded) {
-      return this.responseBody = atob(body.body);
+      return this.responseBody = decodeUtf8Base64(body.body);
     }
     return this.responseBody = body?body.body:'';
   }
@@ -93,7 +112,7 @@ export abstract class Intercepted implements InterceptedData {
       } else {
         modified.responseBody = await this.getResponseBody();
       }
-      modified.responseBody = btoa(modified.responseBody || '');
+      modified.responseBody = encodeUtf8Base64(modified.responseBody || '');
     }
     return modified;
   }
@@ -131,7 +150,7 @@ export class FetchIntercepted extends Intercepted {
         method: request.method,
         url: request.url,
         headers: FetchIntercepted.convertHeaders(request.headers),
-        postData: request.postData ? btoa(request.postData) : undefined
+        postData: request.postData ? encodeUtf8Base64(request.postData) : undefined
       });
   }
 
